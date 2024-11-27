@@ -20,7 +20,8 @@ def main():
         print("Another completely arbitrary line added here! This is another completely arbitrary addition.") #Another completely arbitrary line
         print("This is a completely arbitrary line added for demonstration purposes.")
         print("This line was added after the if statement. This is a completely arbitrary addition.") #Arbitrary addition after if statement.
-        print("Another randomly added line within the even number block.")
+        print("Another randomly added line within the even number block.  This line has been randomly modified.")
+        print("Added a new line here for fun!")
     else:
         print("The random number is odd.")
         print("This line was also randomly added! This is another completely arbitrary addition.") #Another randomly added line, but this time with slightly different wording.  This is completely arbitrary.
@@ -28,12 +29,13 @@ def main():
         print("Yet another completely arbitrary line of text! This is another completely arbitrary addition.") #Yet another completely arbitrary line of text
         print("This line is also completely arbitrary and added for demonstration purposes.")
         print("This line was added after the else statement. This is a completely arbitrary addition.") #Arbitrary addition after else statement.
-        print("Another line added randomly to the odd number block.")
+        print("Another line added randomly to the odd number block.  This line has also been randomly modified.")
+        print("And another one for good measure!")
 
     print("This line was also added randomly! This is another completely arbitrary addition.") #Another randomly added line
     print("This is yet another randomly added line! This is another completely arbitrary addition.") #Another randomly added line
     print("Exiting program...")
-    sys.exit(random.randint(0, 1000)) #Changed exit code range again. This is a completely arbitrary change.
+    sys.exit(random.randint(0, 2000)) #Changed exit code range again. This is a completely arbitrary change.
 
 
 if __name__ == "__main__":
