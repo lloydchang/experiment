@@ -9,12 +9,13 @@ def new_random_function():
 def main():
     print("Program started!")
     print(f"Python version: {sys.version}")
-    my_random_number = random.randint(1, 1000)
-    print(f"A random number between 1 and 1000: {my_random_number}")
+    myRandomNumber = random.randint(1, 1000) # Changed variable name
+    print(f"A random number between 1 and 1000: {myRandomNumber}")
     current_time = datetime.datetime.now()
     print(f"Current date and time: {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print("This line has been randomly added!")
-    if my_random_number % 2 == 0:
+    #This line has been commented out!
+    #print("This line has been randomly added!")
+    if myRandomNumber % 2 == 0:
         print("The random number is even.")
         print("Another random line added here!")
         fruit = new_random_function()
