@@ -12,6 +12,7 @@ def main():
     print("Adding an extra line for fun!")
     if random_number % 2 == 0:
         print("The random number is even.")
+        print("This line was added randomly!") #Randomly added line
     else:
         print("The random number is odd.")
     print("Exiting program...")
@@ -20,3 +21,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
