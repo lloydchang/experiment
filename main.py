@@ -3,19 +3,20 @@ import random
 import datetime
 
 def main():
-    print("Program is about to exit...")
+    print("Program started.")
     print(f"Python version: {sys.version}")
-    random_number = random.randint(1, 100)
-    print(f"A random number: {random_number}")
-    print("This line is randomly added and will likely cause issues.")
-    print(f"Current date and time: {datetime.datetime.now()}") #Added line
-    print("Exiting program...")
-    #Added a comment for demonstration purposes.
-    #Randomly choose exit code
-    if random.random() < 0.5:
-        sys.exit(0) #Exit with code 0
+    random_number = random.randint(1, 1000) #Increased range of random number
+    print(f"A random number between 1 and 1000: {random_number}")
+    current_time = datetime.datetime.now()
+    print(f"Current date and time: {current_time.strftime('%Y-%m-%d %H:%M:%S')}") #Formatted date and time
+    print("Adding an extra line for fun!")
+    if random_number % 2 == 0:
+        print("The random number is even.")
     else:
-        sys.exit(random_number % 2)  # Exit with a random success/failure code
+        print("The random number is odd.")
+    print("Exiting program...")
+    sys.exit(random.randint(0, 10)) #Exit with a random code between 0 and 10
+
 
 if __name__ == "__main__":
     main()
