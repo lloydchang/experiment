@@ -93,6 +93,7 @@ def run_poker_simulation():
             break
         except ValueError as e:
             print(f"Error: {e}")
+            continue #Added to prevent infinite loop on invalid input
 
     for hand_num in range(1, num_hands + 1):
         deck = create_deck()
