@@ -58,10 +58,10 @@ def evaluate_hand_helper(all_cards):
         rank_counts[rank] = rank_counts.get(rank, 0) + 1
 
     counts = list(rank_counts.values())
-    four_of_a_kind = 4 in counts
-    three_of_a_kind = 3 in counts
+    four_of_a_kind = counts.count(4) > 0
+    three_of_a_kind = counts.count(3) > 0
     two_pair = counts.count(2) == 2
-    one_pair = 2 in counts
+    one_pair = counts.count(2) > 0
 
     #Hand Ranking Logic (Improved)
     if straight and flush:
