@@ -8,27 +8,34 @@ def create_deck():
     random.shuffle(deck)
     return deck
 
-def deal_hand(deck, num_players, hand_size):
+def deal_cards(deck, num_players, hand_size, num_community_cards):
+    """Deals cards for Texas Hold'em."""
+    if len(deck) < num_players * hand_size + num_community_cards:
+        raise ValueError("Not enough cards in the deck for the specified number of players and community cards.")
+
+    community_cards = deck[:num_community_cards]
+    remaining_deck = deck[num_community_cards:]
     hands = []
     for i in range(num_players):
-        hands.append(deck[i*hand_size:(i+1)*hand_size])
-    return hands
+        hands.append(remaining_deck[i * hand_size:(i + 1) * hand_size])
+    return community_cards, hands
 
-def deal_community_cards(deck, num_community_cards):
-  return deck[:num_community_cards]
 
 def main():
-    deck = create_deck()
-    num_players = 2
+    num_players = int(input("Enter the number of players: "))
+    if num_players < 2:
+        print("You need at least two players to play Texas Hold'em.")
+        return
+
     hand_size = 2
-    num_community_cards = 5 # 5 community cards (flop, turn, river)
+    num_community_cards = 5
 
-    hands = deal_hand(deck[num_community_cards:], num_players, hand_size) #Deal hands after community cards
-    community_cards = deal_community_cards(deck, num_community_cards)
+    deck = create_deck()
+    community_cards, hands = deal_cards(deck, num_players, hand_size, num_community_cards)
 
+    print("Community cards:", community_cards)
     for i, hand in enumerate(hands):
         print(f"Player {i+1}'s hand: {hand}")
-    print(f"Community cards: {community_cards}")
 
 if __name__ == "__main__":
     main()
