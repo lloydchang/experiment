@@ -35,13 +35,13 @@ def evaluate_hand(hand, community_cards):
     """Evaluates a hand and returns the hand rank and high cards for tie-breaking."""
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
 
-    #Check for Flush
+    #Flush Check
     suits = {}
     for card in all_cards:
         suits[card[1]] = suits.get(card[1], 0) + 1
     flush = max(suits.values()) >= 5
 
-    #Check for Straight
+    #Straight Check
     ranks = [rank_values[card[0]] for card in all_cards]
     ranks.sort()
     straight = False
@@ -49,35 +49,34 @@ def evaluate_hand(hand, community_cards):
         if ranks[i+4] == ranks[i] + 4 and len(set(ranks[i:i+5])) == 5:
             straight = True
             break
-    #Check for Ace-low straight
+    #Ace-low straight check
     if not straight and ranks == [2,3,4,5,14]:
         straight = True
 
-    #Check for pairs, three of a kind, four of a kind, full house
+    #Pair, Three of a Kind, Four of a Kind, Full House Check
     rank_counts = {}
     for rank, _ in all_cards:
         rank_counts[rank] = rank_counts.get(rank, 0) + 1
-
     counts = sorted(rank_counts.values(), reverse=True)
 
-    #Hand Ranking Logic (Improved)
+    #Hand Ranking Logic
     if straight and flush:
-        return "Straight Flush", ranks[1:] #Return high cards for tie-breaking
+        return "Straight Flush", ranks[1:]
     if counts[0] == 4:
-        return "Four of a Kind", ranks[:4] #Return high cards for tie-breaking
+        return "Four of a Kind", ranks[:4]
     if counts[0] == 3 and counts[1] == 2:
-        return "Full House", ranks[:3] + ranks[3:5] #Return high cards for tie-breaking
+        return "Full House", ranks[:3] + ranks[3:5]
     if flush:
-        return "Flush", ranks[1:] #Return high cards for tie-breaking
+        return "Flush", ranks[1:]
     if straight:
-        return "Straight", ranks[1:] #Return high cards for tie-breaking
+        return "Straight", ranks[1:]
     if counts[0] == 3:
-        return "Three of a Kind", ranks[:3] #Return high cards for tie-breaking
+        return "Three of a Kind", ranks[:3]
     if counts[0] == 2 and counts[1] == 2:
-        return "Two Pair", ranks[:4] #Return high cards for tie-breaking
+        return "Two Pair", ranks[:4]
     if counts[0] == 2:
-        return "Pair", ranks[:2] #Return high cards for tie-breaking
-    return "High Card", ranks[1:] #Return high cards for tie-breaking
+        return "Pair", ranks[:2]
+    return "High Card", ranks[1:]
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -121,7 +120,7 @@ def run_poker_simulation():
                 print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank}, High Cards: {[ranks[card-2] for card in high_cards]})")
                 hand_results.append((hand_rank, high_cards, i))
 
-            #Improved Winning Hand Determination (Handles ties)
+            #Winning Hand Determination (Handles ties)
             winning_hands = []
             best_rank_index = float('inf')
             for hand_rank, high_cards, player_index in hand_results:
@@ -137,9 +136,8 @@ def run_poker_simulation():
 
             if len(winning_hands) > 1:
                 print("\nTie between players:", winning_players_str)
-                # Add tie-breaker logic here if needed (comparing high cards)
-                #Tie-breaker logic added below
-                winning_hands.sort(key=lambda x: x[1], reverse=True) #Sort by high cards
+                #Tie-breaker logic
+                winning_hands.sort(key=lambda x: x[1], reverse=True)
                 print(f"\nPlayer {winning_hands[0][2]+1} wins the tie with a {winning_hands[0][0]}!")
 
             else:
