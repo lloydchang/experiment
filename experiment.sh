@@ -5,8 +5,8 @@ if [ ! -f "main.py" ]; then
     exit 1
 fi
 
-if [ -z "$GEMINI_APIKEY" ]; then
-    echo "GEMINI_APIKEY not set"
+if [ -z "$GEMINI_API_KEY" ]; then
+    echo "GEMINI_API_KEY not set"
     exit 1
 fi
 
