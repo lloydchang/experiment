@@ -106,7 +106,6 @@ def run_poker_simulation():
                 print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank})")
         except ValueError as e:
             print(f"Error dealing cards: {e}")
-            #Added more informative error message
         print("-" * 20)
 
 
