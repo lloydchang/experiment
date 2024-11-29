@@ -32,7 +32,7 @@ def evaluate_hand(hand, community_cards):
         return evaluate_cards(all_cards)
     except Exception as e:
         print(f"Error evaluating hand: {e}.  Check your evaluator library installation and that you have the correct version.")
-        return "Error"
+        return None #Return None instead of "Error" for better error handling
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -85,17 +85,24 @@ def run_poker_simulation():
             hand_evaluations = []
             for i, hand in enumerate(hands):
                 evaluation = evaluate_hand(hand, community_cards)
-                hand_evaluations.append((evaluation, hand))
-                print(f"Player {i+1}'s hand: {display_hand(hand)} ({evaluation})")
+                if evaluation is not None: #Check for evaluation errors
+                    hand_evaluations.append((evaluation, hand))
+                    print(f"Player {i+1}'s hand: {display_hand(hand)} ({evaluation})")
+                else:
+                    print(f"Player {i+1}'s hand: {display_hand(hand)} (Error evaluating hand)")
+
 
             #Improved winning hand determination using the evaluator library
-            winning_player = 0
-            winning_hand_rank = hand_evaluations[0][0]
-            for i in range(1, num_players):
-                if hand_evaluations[i][0] > winning_hand_rank:
-                    winning_hand_rank = hand_evaluations[i][0]
-                    winning_player = i
-            print(f"\nPlayer {winning_player + 1} wins with {winning_hand_rank}!")
+            if hand_evaluations: #Check if any hands were successfully evaluated
+                winning_player = 0
+                winning_hand_rank = hand_evaluations[0][0]
+                for i in range(1, len(hand_evaluations)):
+                    if hand_evaluations[i][0] > winning_hand_rank:
+                        winning_hand_rank = hand_evaluations[i][0]
+                        winning_player = i
+                print(f"\nPlayer {winning_player + 1} wins with {winning_hand_rank}!")
+            else:
+                print("\nNo hands could be evaluated.")
 
         except ValueError as e:
             print(f"Error dealing cards: {e}")
