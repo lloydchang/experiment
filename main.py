@@ -31,8 +31,11 @@ def display_hand(hand):
 def evaluate_hand(hand, community_cards):
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
     
-    #This is a simplified hand evaluation.  A full implementation would be much more complex.
-    
+    #Improved hand evaluation using a helper function for clarity
+    return evaluate_hand_helper(all_cards)
+
+
+def evaluate_hand_helper(all_cards):
     #Check for Flush
     suits = {}
     for card in all_cards:
@@ -46,6 +49,9 @@ def evaluate_hand(hand, community_cards):
     for i in range(len(ranks) - 4):
         if ranks[i+4] == ranks[i] + 4 and len(set(ranks[i:i+5])) == 5:
             return "Straight"
+    #Check for Ace-low straight
+    if ranks == [2,3,4,5,14]:
+        return "Straight"
 
     #Check for pairs, three of a kind, four of a kind, full house
     rank_counts = {}
