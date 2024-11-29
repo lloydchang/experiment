@@ -2,6 +2,7 @@ import random
 
 suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
 ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
+rank_values = {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
 
 def create_deck():
     """Creates a shuffled deck of cards."""
@@ -29,6 +30,20 @@ def deal_cards(deck, num_players, hand_size, num_community_cards):
 def display_hand(hand):
     """Displays a hand of cards in a user-friendly format."""
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
+
+def evaluate_hand(hand, community_cards):
+    """Evaluates a hand (simplified - only checks for pairs).""" #This is a placeholder, needs significant expansion for a real poker game.
+    all_cards = hand + community_cards
+    rank_counts = {}
+    for rank, _ in all_cards:
+        rank_counts[rank] = rank_counts.get(rank, 0) + 1
+    
+    has_pair = False
+    for count in rank_counts.values():
+        if count >= 2:
+            has_pair = True
+            break
+    return "Pair" if has_pair else "High Card" # Placeholder - needs full hand evaluation
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -64,7 +79,8 @@ def run_poker_simulation():
             print(f"\n--- Hand {hand_num} ---")
             print("\nCommunity cards:", display_hand(community_cards))
             for i, hand in enumerate(hands):
-                print(f"Player {i+1}'s hand: {display_hand(hand)}")
+                hand_rank = evaluate_hand(hand, community_cards)
+                print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank})")
         except ValueError as e:
             print(f"Error dealing cards: {e}")
         print("-" * 20)
@@ -72,4 +88,3 @@ def run_poker_simulation():
 
 if __name__ == "__main__":
     run_poker_simulation()
-
