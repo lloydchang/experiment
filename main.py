@@ -13,7 +13,7 @@ def create_deck():
 def deal_cards(deck, num_cards):
     """Deals cards from the deck and returns the hand and remaining deck."""
     if len(deck) < num_cards:
-        raise ValueError("Not enough cards in the deck")
+        raise ValueError(f"Not enough cards in the deck to deal {num_cards} cards.")
     hand = deck[:num_cards]
     remaining_deck = deck[num_cards:]
     return hand, remaining_deck
@@ -28,7 +28,11 @@ from evaluator import evaluate_cards
 def evaluate_hand(hand, community_cards):
     """Evaluates a hand using the evaluator library."""
     all_cards = [card[0] + card[1][0] for card in hand + community_cards]
-    return evaluate_cards(all_cards)
+    try:
+        return evaluate_cards(all_cards)
+    except Exception as e:
+        print(f"Error evaluating hand: {e}.  Check your evaluator library installation.")
+        return "Error"
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -42,7 +46,7 @@ def get_integer_input(prompt, min_val, max_val):
             else:
                 raise ValueError(f"Number must be between {min_val} and {max_val}.")
         except ValueError as e:
-            print(f"Invalid input: {e}")
+            print(f"Invalid input: {e}. Please try again.")
 
 
 def run_poker_simulation():
@@ -86,10 +90,12 @@ def run_poker_simulation():
 
             #Improved winning hand determination using the evaluator library
             winning_player = 0
+            winning_hand_rank = hand_evaluations[0][0]
             for i in range(1, num_players):
-                if hand_evaluations[i][0] > hand_evaluations[winning_player][0]:
+                if hand_evaluations[i][0] > winning_hand_rank:
+                    winning_hand_rank = hand_evaluations[i][0]
                     winning_player = i
-            print(f"\nPlayer {winning_player + 1} wins!")
+            print(f"\nPlayer {winning_player + 1} wins with {winning_hand_rank}!")
 
         except ValueError as e:
             print(f"Error dealing cards: {e}")
