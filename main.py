@@ -31,7 +31,6 @@ def display_hand(hand):
     """Displays a hand in a user-friendly format."""
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
-#Improved Hand Evaluation (Still simplified, but better than before)
 def evaluate_hand(hand, community_cards):
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
     
@@ -62,22 +61,22 @@ def evaluate_hand(hand, community_cards):
 
     #Hand Ranking Logic (Improved)
     if straight and flush:
-        return "Straight Flush", ranks[-1] #Added high card for tie-breaking
+        return "Straight Flush", ranks[4:] #Return all high cards for tie-breaking
     if counts[0] == 4:
-        return "Four of a Kind", ranks[0] #Added high card for tie-breaking
+        return "Four of a Kind", ranks[:4] #Return all high cards for tie-breaking
     if counts[0] == 3 and counts[1] == 2:
-        return "Full House", ranks[0] #Added high card for tie-breaking
+        return "Full House", ranks[:3] + ranks[3:5] #Return all high cards for tie-breaking
     if flush:
-        return "Flush", ranks[-1] #Added high card for tie-breaking
+        return "Flush", ranks[1:] #Return all high cards for tie-breaking
     if straight:
-        return "Straight", ranks[-1] #Added high card for tie-breaking
+        return "Straight", ranks[1:] #Return all high cards for tie-breaking
     if counts[0] == 3:
-        return "Three of a Kind", ranks[0] #Added high card for tie-breaking
+        return "Three of a Kind", ranks[:3] #Return all high cards for tie-breaking
     if counts[0] == 2 and counts[1] == 2:
-        return "Two Pair", ranks[0] #Added high card for tie-breaking
+        return "Two Pair", ranks[:4] #Return all high cards for tie-breaking
     if counts[0] == 2:
-        return "Pair", ranks[0] #Added high card for tie-breaking
-    return "High Card", ranks[-1] #Added high card for tie-breaking
+        return "Pair", ranks[:2] #Return all high cards for tie-breaking
+    return "High Card", ranks[1:] #Return all high cards for tie-breaking
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -107,6 +106,8 @@ def run_poker_simulation():
             print(f"Error: {e}")
             continue
 
+    hand_rankings = ["High Card", "Pair", "Two Pair", "Three of a Kind", "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush"]
+
     for hand_num in range(1, num_hands + 1):
         deck = create_deck()
         try:
@@ -115,19 +116,32 @@ def run_poker_simulation():
             print("\nCommunity cards:", display_hand(community_cards))
             hand_results = []
             for i, hand in enumerate(hands):
-                hand_rank, high_card = evaluate_hand(hand, community_cards)
-                print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank}, High Card: {ranks[high_card-2]})")
-                hand_results.append((hand_rank, high_card, i))
+                hand_rank, high_cards = evaluate_hand(hand, community_cards)
+                print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank}, High Cards: {[ranks[card-2] for card in high_cards]})")
+                hand_results.append((hand_rank, high_cards, i))
 
-            #Simple Winning Hand Determination (needs improvement for ties)
-            winning_hand = max(hand_results, key=lambda x: (hand_rankings.index(x[0]), x[1]))
-            print(f"\nPlayer {winning_hand[2]+1} wins with a {winning_hand[0]}!")
+            #Improved Winning Hand Determination (Handles ties)
+            winning_hands = []
+            best_rank_index = float('inf')
+            for hand_rank, high_cards, player_index in hand_results:
+                rank_index = hand_rankings.index(hand_rank)
+                if rank_index < best_rank_index:
+                    winning_hands = [(hand_rank, high_cards, player_index)]
+                    best_rank_index = rank_index
+                elif rank_index == best_rank_index:
+                    winning_hands.append((hand_rank, high_cards, player_index))
+
+            winning_player_indices = [player_index for _, _, player_index in winning_hands]
+            winning_players_str = ", ".join(map(str, [index + 1 for index in winning_player_indices]))
+
+            if len(winning_hands) > 1:
+                print("\nTie!")
+            else:
+                print(f"\nPlayer {winning_hands[0][2]+1} wins with a {winning_hands[0][0]}!")
 
         except ValueError as e:
             print(f"Error dealing cards: {e}")
         print("-" * 20)
-
-hand_rankings = ["High Card", "Pair", "Two Pair", "Three of a Kind", "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush"]
 
 if __name__ == "__main__":
     run_poker_simulation()
