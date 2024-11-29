@@ -32,12 +32,14 @@ def display_hand(hand):
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
 def evaluate_hand(hand, community_cards):
-    """Evaluates a hand's rank."""
+    """Evaluates a hand's rank -  This is a simplified evaluator!"""
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
     return evaluate_hand_helper(all_cards)
 
 def evaluate_hand_helper(all_cards):
-    """Helper function for hand evaluation (Improved)."""
+    #This is a simplified evaluator and will not correctly evaluate all hands.
+    #A robust evaluator requires a significantly more complex algorithm.
+
     #Check for Flush
     suits = {}
     for card in all_cards:
@@ -67,7 +69,7 @@ def evaluate_hand_helper(all_cards):
     two_pair = counts.count(2) == 2
     one_pair = counts.count(2) > 0
 
-    #Hand Ranking Logic (Improved)
+    #Hand Ranking Logic (Improved but still simplified)
     if straight and flush:
         return "Straight Flush"
     if four_of_a_kind:
