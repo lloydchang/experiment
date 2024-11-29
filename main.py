@@ -12,21 +12,18 @@ def create_deck():
 def deal_cards(deck, num_cards):
     if len(deck) < num_cards:
         raise ValueError("Not enough cards in the deck")
-    return deck[:num_cards], deck[num_cards:]
+    hand, remaining_deck = deck[:num_cards], deck[num_cards:]
+    return hand, remaining_deck
 
 def display_hand(hand):
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
-def evaluate_hand(hand, community_cards):
-    all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
-    # ... (Hand evaluation logic remains largely the same, but could be further refined for robustness) ...
-    #This section requires significant improvement for a truly robust poker hand evaluator.  Consider using a dedicated poker hand evaluator library for production-level code.
+#Improved hand evaluation using a dedicated library.  Install with: pip install evaluator
+from evaluator import evaluate_cards
 
-    #Simplified for brevity in this example.  A full implementation would require a much more detailed hand ranking system.
-    if all_cards[-1][0] == "A":
-        return "High Card", all_cards[-1:]
-    else:
-        return "High Card", all_cards[-1:]
+def evaluate_hand(hand, community_cards):
+    all_cards = [card[0] + card[1][0] for card in hand + community_cards]
+    return evaluate_cards(all_cards)
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -74,14 +71,16 @@ def run_poker_simulation():
 
             print(f"\n--- Hand {hand_num} ---")
             print("\nCommunity cards:", display_hand(community_cards))
+            hand_evaluations = []
             for i, hand in enumerate(hands):
-                hand_rank, high_cards = evaluate_hand(hand, community_cards)
-                print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank}, High Cards: {high_cards}")
+                evaluation = evaluate_hand(hand, community_cards)
+                hand_evaluations.append((evaluation, hand))
+                print(f"Player {i+1}'s hand: {display_hand(hand)} ({evaluation})")
 
-            #Simplified winning hand determination (needs improvement for real tie-breaking)
+            #Improved winning hand determination using the evaluator library
             winning_player = 0
             for i in range(1, num_players):
-                if rank_values[hands[i][-1][0]] > rank_values[hands[winning_player][-1][0]]:
+                if hand_evaluations[i][0] > hand_evaluations[winning_player][0]:
                     winning_player = i
             print(f"\nPlayer {winning_player + 1} wins!")
 
