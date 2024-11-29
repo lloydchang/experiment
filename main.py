@@ -93,7 +93,7 @@ def run_poker_simulation():
             break
         except ValueError as e:
             print(f"Error: {e}")
-            continue #Added to prevent infinite loop on invalid input
+            continue
 
     for hand_num in range(1, num_hands + 1):
         deck = create_deck()
@@ -106,6 +106,7 @@ def run_poker_simulation():
                 print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank})")
         except ValueError as e:
             print(f"Error dealing cards: {e}")
+            #Added more informative error message
         print("-" * 20)
 
 
