@@ -31,44 +31,51 @@ def display_hand(hand):
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
 
-def main():
-    """Main function to run the Texas Hold'em dealing simulation."""
+def get_num_players():
+    """Gets the number of players from the user with input validation."""
     while True:
         try:
-            num_players_str = input("Enter the number of players (2 or more): ")
+            num_players_str = input("Enter the number of players (2-10): ")
             num_players = int(num_players_str)
-            if num_players < 2:
-                raise ValueError("You need at least two players.")
-            if num_players > 10: #Added a reasonable upper limit
-                raise ValueError("Too many players.  Maximum 10 players allowed.")
-            break
+            if 2 <= num_players <= 10:
+                return num_players
+            else:
+                raise ValueError("Number of players must be between 2 and 10.")
         except ValueError as e:
-            print(f"Invalid input: {e}. Please enter a number between 2 and 10.")
+            print(f"Invalid input: {e}")
 
-    hand_size = 2
-    num_community_cards = 5
-
+def get_num_hands():
+    """Gets the number of hands to deal from the user with input validation."""
     while True:
         try:
             num_hands_str = input("Enter the number of hands to deal (1 or more): ")
             num_hands = int(num_hands_str)
-            if num_hands < 1:
-                raise ValueError("You must deal at least one hand.")
-            break
+            if num_hands >= 1:
+                return num_hands
+            else:
+                raise ValueError("Number of hands must be at least 1.")
         except ValueError as e:
-            print(f"Invalid input: {e}. Please enter a number greater than 0.")
+            print(f"Invalid input: {e}")
 
 
-    for _ in range(num_hands):
+def main():
+    """Main function to run the Texas Hold'em dealing simulation."""
+    num_players = get_num_players()
+    num_hands = get_num_hands()
+    hand_size = 2
+    num_community_cards = 5
+
+    for hand_num in range(1, num_hands + 1):
         deck = create_deck()
         try:
             community_cards, hands = deal_cards(deck, num_players, hand_size, num_community_cards)
+            print(f"\n--- Hand {hand_num} ---")
             print("\nCommunity cards:", display_hand(community_cards))
             for i, hand in enumerate(hands):
                 print(f"Player {i+1}'s hand: {display_hand(hand)}")
         except ValueError as e:
             print(f"Error dealing cards: {e}")
-        print("-" * 20) #Added separator between hands
+        print("-" * 20)
 
 
 if __name__ == "__main__":
