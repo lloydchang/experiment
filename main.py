@@ -5,11 +5,13 @@ ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 rank_values = {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
 
 def create_deck():
+    """Creates and shuffles a standard 52-card deck."""
     deck = [(rank, suit) for suit in suits for rank in ranks]
     random.shuffle(deck)
     return deck
 
 def deal_cards(deck, num_players, hand_size, num_community_cards):
+    """Deals cards to players and the community."""
     deck_size = len(deck)
     required_cards = num_players * hand_size + num_community_cards
     if deck_size < required_cards:
@@ -26,14 +28,16 @@ def deal_cards(deck, num_players, hand_size, num_community_cards):
 
 
 def display_hand(hand):
+    """Displays a hand in a user-friendly format."""
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
 def evaluate_hand(hand, community_cards):
+    """Evaluates a hand's rank."""
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
     return evaluate_hand_helper(all_cards)
 
 def evaluate_hand_helper(all_cards):
-    #Improved hand evaluation using a helper function for clarity
+    """Helper function for hand evaluation (Improved)."""
     #Check for Flush
     suits = {}
     for card in all_cards:
@@ -84,6 +88,7 @@ def evaluate_hand_helper(all_cards):
 
 
 def get_integer_input(prompt, min_val, max_val):
+    """Gets integer input within a specified range, with error handling."""
     while True:
         try:
             num_str = input(prompt)
@@ -97,6 +102,7 @@ def get_integer_input(prompt, min_val, max_val):
 
 
 def run_poker_simulation():
+    """Runs a poker simulation."""
     while True:
         try:
             num_players = get_integer_input("Enter the number of players (2-10): ", 2, 10)
