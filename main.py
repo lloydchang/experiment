@@ -28,19 +28,24 @@ def deal_cards(deck, num_players, hand_size, num_community_cards):
 def display_hand(hand):
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
-#Improved hand evaluation using a simplified approach.  A full implementation would require a much more complex algorithm.
 def evaluate_hand(hand, community_cards):
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
     
-    #Check for flush (simplified - only checks for same suit in the last 5 cards)
-    if all(card[1] == all_cards[-1][1] for card in all_cards[-5:]):
+    #Check for Flush
+    suits = {}
+    for card in all_cards:
+        suits[card[1]] = suits.get(card[1], 0) + 1
+    if max(suits.values()) >= 5:
         return "Flush"
 
-    #Check for straight (simplified - only checks for consecutive ranks in the last 5 cards)
-    if all(rank_values[all_cards[i+1][0]] == rank_values[all_cards[i][0]] + 1 for i in range(len(all_cards)-5, len(all_cards)-1)):
-        return "Straight"
+    #Check for Straight
+    ranks = [rank_values[card[0]] for card in all_cards]
+    ranks.sort()
+    for i in range(len(ranks) - 4):
+        if ranks[i+4] == ranks[i] + 4 and len(set(ranks[i:i+5])) == 5:
+            return "Straight"
 
-    #Check for pairs, three of a kind, four of a kind (simplified)
+    #Check for pairs, three of a kind, four of a kind, full house
     rank_counts = {}
     for rank, _ in all_cards:
         rank_counts[rank] = rank_counts.get(rank, 0) + 1
