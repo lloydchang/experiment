@@ -5,13 +5,11 @@ ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 rank_values = {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
 
 def create_deck():
-    """Creates a shuffled deck of cards."""
     deck = [(rank, suit) for suit in suits for rank in ranks]
     random.shuffle(deck)
     return deck
 
 def deal_cards(deck, num_players, hand_size, num_community_cards):
-    """Deals cards to players and the community. Raises ValueError if not enough cards."""
     deck_size = len(deck)
     required_cards = num_players * hand_size + num_community_cards
     if deck_size < required_cards:
@@ -28,26 +26,40 @@ def deal_cards(deck, num_players, hand_size, num_community_cards):
 
 
 def display_hand(hand):
-    """Displays a hand of cards in a user-friendly format."""
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
+#Improved hand evaluation using a simplified approach.  A full implementation would require a much more complex algorithm.
 def evaluate_hand(hand, community_cards):
-    """Evaluates a hand (simplified - only checks for pairs).""" #This is a placeholder, needs significant expansion for a real poker game.
-    all_cards = hand + community_cards
+    all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
+    
+    #Check for flush (simplified - only checks for same suit in the last 5 cards)
+    if all(card[1] == all_cards[-1][1] for card in all_cards[-5:]):
+        return "Flush"
+
+    #Check for straight (simplified - only checks for consecutive ranks in the last 5 cards)
+    if all(rank_values[all_cards[i+1][0]] == rank_values[all_cards[i][0]] + 1 for i in range(len(all_cards)-5, len(all_cards)-1)):
+        return "Straight"
+
+    #Check for pairs, three of a kind, four of a kind (simplified)
     rank_counts = {}
     for rank, _ in all_cards:
         rank_counts[rank] = rank_counts.get(rank, 0) + 1
-    
-    has_pair = False
-    for count in rank_counts.values():
-        if count >= 2:
-            has_pair = True
-            break
-    return "Pair" if has_pair else "High Card" # Placeholder - needs full hand evaluation
+
+    counts = list(rank_counts.values())
+    if 4 in counts:
+        return "Four of a Kind"
+    if 3 in counts and 2 in counts:
+        return "Full House"
+    if 3 in counts:
+        return "Three of a Kind"
+    if counts.count(2) == 2:
+        return "Two Pair"
+    if 2 in counts:
+        return "Pair"
+    return "High Card"
 
 
 def get_integer_input(prompt, min_val, max_val):
-    """Gets an integer input from the user with validation."""
     while True:
         try:
             num_str = input(prompt)
@@ -61,14 +73,13 @@ def get_integer_input(prompt, min_val, max_val):
 
 
 def run_poker_simulation():
-    """Runs a single poker hand simulation."""
     while True:
         try:
             num_players = get_integer_input("Enter the number of players (2-10): ", 2, 10)
             num_hands = get_integer_input("Enter the number of hands to deal (1 or more): ", 1, 100)
             hand_size = 2
             num_community_cards = 5
-            break  # Exit loop if input is valid
+            break
         except ValueError as e:
             print(f"Error: {e}")
 
