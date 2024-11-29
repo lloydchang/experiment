@@ -31,7 +31,7 @@ def evaluate_hand(hand, community_cards):
     try:
         return evaluate_cards(all_cards)
     except Exception as e:
-        print(f"Error evaluating hand: {e}.  Check your evaluator library installation.")
+        print(f"Error evaluating hand: {e}.  Check your evaluator library installation and that you have the correct version.")
         return "Error"
 
 
@@ -54,7 +54,7 @@ def run_poker_simulation():
     while True:
         try:
             num_players = get_integer_input("Enter the number of players (2-10): ", 2, 10)
-            num_hands = get_integer_input("Enter the number of hands to simulate (1 or more): ", 1, 100)
+            num_hands = get_integer_input("Enter the number of hands to simulate (1 or more): ", 1, 1000) #Increased max hands
             hand_size = 2
             num_community_cards = 5
             break
@@ -99,6 +99,8 @@ def run_poker_simulation():
 
         except ValueError as e:
             print(f"Error dealing cards: {e}")
+        except Exception as e: #Catch any other unexpected errors
+            print(f"An unexpected error occurred: {e}")
         print("-" * 20)
 
 if __name__ == "__main__":
