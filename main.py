@@ -32,6 +32,7 @@ def display_hand(hand):
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
 def evaluate_hand(hand, community_cards):
+    """Evaluates a hand and returns the hand rank and high cards for tie-breaking."""
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
     
     #Check for Flush
@@ -61,22 +62,22 @@ def evaluate_hand(hand, community_cards):
 
     #Hand Ranking Logic (Improved)
     if straight and flush:
-        return "Straight Flush", ranks[4:] #Return all high cards for tie-breaking
+        return "Straight Flush", ranks[1:] #Return high cards for tie-breaking
     if counts[0] == 4:
-        return "Four of a Kind", ranks[:4] #Return all high cards for tie-breaking
+        return "Four of a Kind", ranks[:4] #Return high cards for tie-breaking
     if counts[0] == 3 and counts[1] == 2:
-        return "Full House", ranks[:3] + ranks[3:5] #Return all high cards for tie-breaking
+        return "Full House", ranks[:3] + ranks[3:5] #Return high cards for tie-breaking
     if flush:
-        return "Flush", ranks[1:] #Return all high cards for tie-breaking
+        return "Flush", ranks[1:] #Return high cards for tie-breaking
     if straight:
-        return "Straight", ranks[1:] #Return all high cards for tie-breaking
+        return "Straight", ranks[1:] #Return high cards for tie-breaking
     if counts[0] == 3:
-        return "Three of a Kind", ranks[:3] #Return all high cards for tie-breaking
+        return "Three of a Kind", ranks[:3] #Return high cards for tie-breaking
     if counts[0] == 2 and counts[1] == 2:
-        return "Two Pair", ranks[:4] #Return all high cards for tie-breaking
+        return "Two Pair", ranks[:4] #Return high cards for tie-breaking
     if counts[0] == 2:
-        return "Pair", ranks[:2] #Return all high cards for tie-breaking
-    return "High Card", ranks[1:] #Return all high cards for tie-breaking
+        return "Pair", ranks[:2] #Return high cards for tie-breaking
+    return "High Card", ranks[1:] #Return high cards for tie-breaking
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -135,7 +136,8 @@ def run_poker_simulation():
             winning_players_str = ", ".join(map(str, [index + 1 for index in winning_player_indices]))
 
             if len(winning_hands) > 1:
-                print("\nTie!")
+                print("\nTie between players:", winning_players_str)
+                # Add tie-breaker logic here if needed (comparing high cards)
             else:
                 print(f"\nPlayer {winning_hands[0][2]+1} wins with a {winning_hands[0][0]}!")
 
