@@ -30,12 +30,10 @@ def display_hand(hand):
 
 def evaluate_hand(hand, community_cards):
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
-    
-    #Improved hand evaluation using a helper function for clarity
     return evaluate_hand_helper(all_cards)
 
-
 def evaluate_hand_helper(all_cards):
+    #Improved hand evaluation using a helper function for clarity
     #Check for Flush
     suits = {}
     for card in all_cards:
