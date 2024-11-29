@@ -34,7 +34,7 @@ def display_hand(hand):
 def evaluate_hand(hand, community_cards):
     """Evaluates a hand and returns the hand rank and high cards for tie-breaking."""
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
-    
+
     #Check for Flush
     suits = {}
     for card in all_cards:
@@ -138,6 +138,10 @@ def run_poker_simulation():
             if len(winning_hands) > 1:
                 print("\nTie between players:", winning_players_str)
                 # Add tie-breaker logic here if needed (comparing high cards)
+                #Tie-breaker logic added below
+                winning_hands.sort(key=lambda x: x[1], reverse=True) #Sort by high cards
+                print(f"\nPlayer {winning_hands[0][2]+1} wins the tie with a {winning_hands[0][0]}!")
+
             else:
                 print(f"\nPlayer {winning_hands[0][2]+1} wins with a {winning_hands[0][0]}!")
 
