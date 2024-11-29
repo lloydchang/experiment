@@ -10,11 +10,11 @@ def create_deck():
     return deck
 
 def deal_cards(deck, num_players, hand_size, num_community_cards):
-    """Deals cards to players and the community.  Raises ValueError if not enough cards."""
+    """Deals cards to players and the community. Raises ValueError if not enough cards."""
     deck_size = len(deck)
     required_cards = num_players * hand_size + num_community_cards
     if deck_size < required_cards:
-        raise ValueError(f"Not enough cards in the deck to deal {num_players} hands.  Need {required_cards}, have {deck_size}.")
+        raise ValueError(f"Not enough cards in the deck to deal {num_players} hands. Need {required_cards}, have {deck_size}.")
 
     community_cards = deck[:num_community_cards]
     player_hands = []
@@ -47,10 +47,15 @@ def get_integer_input(prompt, min_val, max_val):
 
 def run_poker_simulation():
     """Runs a single poker hand simulation."""
-    num_players = get_integer_input("Enter the number of players (2-10): ", 2, 10)
-    num_hands = get_integer_input("Enter the number of hands to deal (1 or more): ", 1, 100) #Added a reasonable upper limit
-    hand_size = 2
-    num_community_cards = 5
+    while True:
+        try:
+            num_players = get_integer_input("Enter the number of players (2-10): ", 2, 10)
+            num_hands = get_integer_input("Enter the number of hands to deal (1 or more): ", 1, 100)
+            hand_size = 2
+            num_community_cards = 5
+            break  # Exit loop if input is valid
+        except ValueError as e:
+            print(f"Error: {e}")
 
     for hand_num in range(1, num_hands + 1):
         deck = create_deck()
@@ -67,3 +72,4 @@ def run_poker_simulation():
 
 if __name__ == "__main__":
     run_poker_simulation()
+
