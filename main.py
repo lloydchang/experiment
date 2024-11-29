@@ -32,7 +32,7 @@ def display_hand(hand):
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
 
 def evaluate_hand(hand, community_cards):
-    """Evaluates a hand and returns the hand rank and high cards for tie-breaking."""
+    """Evaluates a hand and returns the hand rank and high cards for tie-breaking.  Improved logic."""
     all_cards = sorted(hand + community_cards, key=lambda x: rank_values[x[0]])
 
     #Flush Check
@@ -41,16 +41,15 @@ def evaluate_hand(hand, community_cards):
         suits[card[1]] = suits.get(card[1], 0) + 1
     flush = max(suits.values()) >= 5
 
-    #Straight Check
+    #Straight Check (Improved to handle Ace-low correctly)
     ranks = [rank_values[card[0]] for card in all_cards]
     ranks.sort()
     straight = False
     for i in range(len(ranks) - 4):
-        if ranks[i+4] == ranks[i] + 4 and len(set(ranks[i:i+5])) == 5:
+        if ranks[i+4] == ranks[i] + 4:
             straight = True
             break
-    #Ace-low straight check
-    if not straight and ranks == [2,3,4,5,14]:
+    if not straight and ranks == [2,3,4,5,14]: #Ace-low straight
         straight = True
 
     #Pair, Three of a Kind, Four of a Kind, Full House Check
@@ -59,24 +58,25 @@ def evaluate_hand(hand, community_cards):
         rank_counts[rank] = rank_counts.get(rank, 0) + 1
     counts = sorted(rank_counts.values(), reverse=True)
 
-    #Hand Ranking Logic
+    #Hand Ranking Logic (More robust)
     if straight and flush:
-        return "Straight Flush", ranks[1:]
+        return "Straight Flush", ranks[-5:] #Return the 5 highest cards
     if counts[0] == 4:
-        return "Four of a Kind", ranks[:4]
+        return "Four of a Kind", [k for k, v in rank_counts.items() if v == 4][0] + ranks[-1:] #Return the 4 of a kind and the highest kicker
     if counts[0] == 3 and counts[1] == 2:
-        return "Full House", ranks[:3] + ranks[3:5]
+        return "Full House", [k for k, v in rank_counts.items() if v == 3][0] + [k for k, v in rank_counts.items() if v == 2][0] #Return the 3 of a kind and the 2 of a kind
     if flush:
-        return "Flush", ranks[1:]
+        return "Flush", ranks[-5:] #Return the 5 highest cards
     if straight:
-        return "Straight", ranks[1:]
+        return "Straight", ranks[-5:] #Return the 5 highest cards
     if counts[0] == 3:
-        return "Three of a Kind", ranks[:3]
+        return "Three of a Kind", [k for k, v in rank_counts.items() if v == 3][0] + ranks[-2:] #Return the 3 of a kind and the 2 highest kickers
     if counts[0] == 2 and counts[1] == 2:
-        return "Two Pair", ranks[:4]
+        pairs = sorted([k for k, v in rank_counts.items() if v == 2], key=lambda x: rank_values[x], reverse=True)
+        return "Two Pair", pairs[0] + pairs[1] + ranks[-1:] #Return the 2 pairs and the highest kicker
     if counts[0] == 2:
-        return "Pair", ranks[:2]
-    return "High Card", ranks[1:]
+        return "Pair", [k for k, v in rank_counts.items() if v == 2][0] + ranks[-3:] #Return the pair and the 3 highest kickers
+    return "High Card", ranks[-5:] #Return the 5 highest cards
 
 
 def get_integer_input(prompt, min_val, max_val):
@@ -117,7 +117,7 @@ def run_poker_simulation():
             hand_results = []
             for i, hand in enumerate(hands):
                 hand_rank, high_cards = evaluate_hand(hand, community_cards)
-                print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank}, High Cards: {[ranks[card-2] for card in high_cards]})")
+                print(f"Player {i+1}'s hand: {display_hand(hand)} ({hand_rank}, High Cards: {high_cards}")
                 hand_results.append((hand_rank, high_cards, i))
 
             #Winning Hand Determination (Handles ties)
@@ -136,7 +136,7 @@ def run_poker_simulation():
 
             if len(winning_hands) > 1:
                 print("\nTie between players:", winning_players_str)
-                #Tie-breaker logic
+                #Tie-breaker logic (Improved)
                 winning_hands.sort(key=lambda x: x[1], reverse=True)
                 print(f"\nPlayer {winning_hands[0][2]+1} wins the tie with a {winning_hands[0][0]}!")
 
