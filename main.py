@@ -38,18 +38,19 @@ def evaluate_hand_helper(all_cards):
     suits = {}
     for card in all_cards:
         suits[card[1]] = suits.get(card[1], 0) + 1
-    if max(suits.values()) >= 5:
-        return "Flush"
+    flush = max(suits.values()) >= 5
 
     #Check for Straight
     ranks = [rank_values[card[0]] for card in all_cards]
     ranks.sort()
+    straight = False
     for i in range(len(ranks) - 4):
         if ranks[i+4] == ranks[i] + 4 and len(set(ranks[i:i+5])) == 5:
-            return "Straight"
+            straight = True
+            break
     #Check for Ace-low straight
-    if ranks == [2,3,4,5,14]:
-        return "Straight"
+    if not straight and ranks == [2,3,4,5,14]:
+        straight = True
 
     #Check for pairs, three of a kind, four of a kind, full house
     rank_counts = {}
@@ -57,15 +58,27 @@ def evaluate_hand_helper(all_cards):
         rank_counts[rank] = rank_counts.get(rank, 0) + 1
 
     counts = list(rank_counts.values())
-    if 4 in counts:
+    four_of_a_kind = 4 in counts
+    three_of_a_kind = 3 in counts
+    two_pair = counts.count(2) == 2
+    one_pair = 2 in counts
+
+    #Hand Ranking Logic (Improved)
+    if straight and flush:
+        return "Straight Flush"
+    if four_of_a_kind:
         return "Four of a Kind"
-    if 3 in counts and 2 in counts:
+    if three_of_a_kind and one_pair:
         return "Full House"
-    if 3 in counts:
+    if flush:
+        return "Flush"
+    if straight:
+        return "Straight"
+    if three_of_a_kind:
         return "Three of a Kind"
-    if counts.count(2) == 2:
+    if two_pair:
         return "Two Pair"
-    if 2 in counts:
+    if one_pair:
         return "Pair"
     return "High Card"
 
