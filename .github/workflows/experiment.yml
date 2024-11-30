@@ -24,6 +24,8 @@ jobs:
           git config --local user.email "lloydchang@gmail.com" || true
           git config --local user.name "lloydchang" || true
           echo "edit main.py and improve it to make the world's best texas hold'em poker game" | aider --analytics-disable --yes --model gemini/gemini-1.5-flash-latest --map-tokens 1024 || true
+          pipreqs --force || true
+          pip install -r requirements.txt || true
           python main.py || true
 
       - name: Commit and Push changes
