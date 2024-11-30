@@ -4,8 +4,7 @@ name: experiment
 
 on:
   schedule:
-    # - cron: '0 0 * * *' # Runs daily at midnight UTC
-    - cron: '0 * * * *' # Runs every hour at the start of the hour
+    - cron: '* * * * *' # Runs every minute
   workflow_dispatch: # Enables manual triggers
 
 jobs:
@@ -24,7 +23,7 @@ jobs:
           python -m pip install -U aider-chat || true
           git config --local user.email "lloydchang@gmail.com" || true
           git config --local user.name "lloydchang" || true
-          ./experiment.sh
+          echo "edit main.py and improve it to make the world's best texas hold'em poker game" | aider --analytics-disable --yes --model gemini/gemini-1.5-flash-latest --map-tokens 1024
 
       - name: Commit and Push changes
         uses: ad-m/github-push-action@master
