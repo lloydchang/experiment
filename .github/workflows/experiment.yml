@@ -24,7 +24,7 @@ jobs:
           python -m pip install -U aider-chat || true
           git config --local user.email "lloydchang@gmail.com" || true
           git config --local user.name "lloydchang" || true
-          experiment.sh
+          ./experiment.sh
 
       - name: Commit and Push changes
         uses: ad-m/github-push-action@master
