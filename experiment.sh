@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 if [ ! -f "main.py" ]; then
     echo "main.py not found"
