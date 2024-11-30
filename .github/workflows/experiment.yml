@@ -8,13 +8,13 @@ on:
   workflow_dispatch: # Enables manual triggers
 
 jobs:
-  update:
+  experiment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Update content.txt
+      - name: experiment
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
