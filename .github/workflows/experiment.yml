@@ -3,7 +3,7 @@
 name: experiment
 
 on:
-  schedule:
+  # schedule:
     # - cron: '0 * * * *' # Runs every hour at the start of the hour
   workflow_dispatch: # Enables manual triggers
 
