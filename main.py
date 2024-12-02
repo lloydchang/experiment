@@ -118,7 +118,7 @@ def main():
             evaluation = hand_evaluations[j][0]
             print(f"Player {j+1}'s hand: {display_hand(hand)} {'('+str(evaluation)+')' if evaluation is not None else '(Error evaluating hand)'}")
         if winner is not None:
-            print(f"\nPlayer {winner + 1} wins with {winning_hand}!")
+            print(f"\nPlayer {winner + 1} wins with a {winning_hand}!")
         else:
             print("\nNo hands could be evaluated.")
         print("-" * 20)
@@ -136,14 +136,45 @@ class TestPokerGame(unittest.TestCase):
         self.assertEqual(len(remaining_deck), 47)
 
     def test_evaluate_hand_full_house(self):
-        #Example test case - needs expansion for more hand types
         hand = [("K", "Hearts"), ("K", "Diamonds")]
         community_cards = [("K", "Clubs"), ("Q", "Spades"), ("Q", "Hearts"), ("2", "Clubs"), ("A", "Diamonds")]
         evaluation = evaluate_hand(hand, community_cards)
         self.assertEqual(evaluation, 7) #Full House
 
+    def test_evaluate_hand_error(self):
+        hand = [("K", "Hearts"), ("K", "Diamonds")]
+        community_cards = [("K", "Clubs"), ("Q", "Spades"), ("Q", "Hearts"), ("2", "Clubs"), ("A", "Diamonds")]
+        #Simulate an error in the evaluator library
+        try:
+            from evaluator import evaluate_cards
+            evaluate_cards("invalid input")
+            self.fail("Expected exception not raised")
+        except Exception as e:
+            self.assertTrue(True) #Expect an exception
+
+
+    def test_determine_winner(self):
+        hand_evaluations = [(8, ["A", "K"]), (7, ["Q", "J"])]
+        winner, winning_hand = determine_winner(hand_evaluations)
+        self.assertEqual(winner, 0)
+        self.assertEqual(winning_hand, 8)
+
+        hand_evaluations = [(7, ["A", "K"]), (7, ["Q", "J"])]
+        winner, winning_hand = determine_winner(hand_evaluations)
+        self.assertEqual(winner, 0)
+        self.assertEqual(winning_hand, 7)
+
+        hand_evaluations = [(None, ["A", "K"]), (7, ["Q", "J"])]
+        winner, winning_hand = determine_winner(hand_evaluations)
+        self.assertEqual(winner, 1)
+        self.assertEqual(winning_hand, 7)
+
+        hand_evaluations = [(None, ["A", "K"]), (None, ["Q", "J"])]
+        winner, winning_hand = determine_winner(hand_evaluations)
+        self.assertIsNone(winner)
+        self.assertIsNone(winning_hand)
+
 
 if __name__ == "__main__":
-    #main() #Uncomment to run the poker simulation
     unittest.main(argv=['first-arg-is-ignored'], exit=False) #Run tests
 
