@@ -1,5 +1,6 @@
 import random
 import unittest
+from evaluator import evaluate_cards
 
 suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
 ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
@@ -18,9 +19,6 @@ def deal_cards(deck, num_cards):
 
 def display_hand(hand):
     return " ".join([f"{rank}{suit[0]}" for rank, suit in hand])
-
-#Improved hand evaluation using a dedicated library.  Install with: pip install evaluator
-from evaluator import evaluate_cards
 
 def evaluate_hand(hand, community_cards):
     all_cards = [card[0] + card[1][0] for card in hand + community_cards]
@@ -62,10 +60,7 @@ def play_hand(num_players, hand_size, num_community_cards):
         hand_evaluations = []
         for hand in hands:
             evaluation = evaluate_hand(hand, community_cards)
-            if evaluation is not None:
-                hand_evaluations.append((evaluation, hand))
-            else:
-                hand_evaluations.append((None, hand)) #Append None for error handling
+            hand_evaluations.append((evaluation, hand)) #Improved error handling
 
         return hands, community_cards, hand_evaluations
 
