@@ -93,11 +93,13 @@ def run_poker_simulation(num_players, num_hands):
     hand_size = 2
     num_community_cards = 5
     results = []
-    for _ in range(num_hands):
+    for i in range(num_hands):
         hands, community_cards, hand_evaluations = play_hand(num_players, hand_size, num_community_cards)
         if hands and community_cards and hand_evaluations:
             winner, winning_hand = determine_winner(hand_evaluations)
             results.append((hands, community_cards, hand_evaluations, winner, winning_hand))
+        else:
+            print(f"Hand {i+1} could not be played due to an error.")
     return results
 
 
