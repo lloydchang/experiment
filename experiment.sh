@@ -10,4 +10,4 @@ if [ -z "$GEMINI_API_KEY" ]; then
     exit 1
 fi
 
-while true; do echo "edit main.py and improve it to make the world's best texas hold'em poker game" | aider --analytics-disable --no-attribute-author --no-attribute-committer --yes --model gemini/gemini-1.5-flash-latest --map-tokens 1024; done
+while true; do echo "edit main.py and improve it to make the world's best texas hold'em poker game, write test cases for it, and run the tests to make sure they pass, and if the code fails tests, keep iterating" | aider --analytics-disable --no-attribute-author --no-attribute-committer --yes --model gemini/gemini-1.5-flash-latest --map-tokens 1024; done
